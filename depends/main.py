@@ -1,11 +1,11 @@
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI,Depends,Header,HTTPException
 app=FastAPI()
-
-def User():
-    return "welcome"
-@app.get("/home")
-def user_get(user= Depends(User)):
-    return user
-@app.get("/about")
-def about_user(user=Depends(User)):
-    return user
+def authorized_user(code:str=Header(None)):
+    if code =="noman":
+        return "authorized user"
+    raise HTTPException(status_code=401,detail='unauthorized')
+@app.get("/Secure-user")
+def secure(token =Depends(authorized_user)):
+    return {"welcome":"secured",
+            'token':token}
+    
