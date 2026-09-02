@@ -1,13 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,status,HTTPException    
 from pydantic import BaseModel
 app = FastAPI()
-class User(BaseModel):
-    id: int
-    name: str
-    password: str
-class UserResponse(BaseModel):
-    id: int
-    name: str
-@app.get("/users/", response_model=UserResponse)
-def get_users():
-    return {"id": 1, "name": "John Doe", "password": "secret"}
+
+@app.post("/todo",status_code=status.HTTP_201_CREATED)
+def create_todo(todo:dict):
+    return {
+        'message': 'Todo item created successfully',
+        'todo': todo
+    }
+    raise HTTPException(status_code=400, detail="Invalid todo item")
