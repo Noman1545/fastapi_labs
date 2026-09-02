@@ -44,3 +44,12 @@ def edit_user(id:int, user:User):
                 'todo': user
             }
     raise HTTPException(status_code=404, detail="Todo item not found")
+@app.delete('/delete/{id}')
+def delete_todo(id:int):
+    for index, todo in enumerate(todos):
+        if todo.id==id:
+            todos.pop(index)
+            return {
+                'message': 'Todo item deleted successfully'
+            }
+    raise HTTPException(status_code=404, detail="Todo item not found")
