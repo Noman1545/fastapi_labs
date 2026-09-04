@@ -1,29 +1,31 @@
-from fastapi import FastAPI,Depends
-from sqlalchemy import create_engine,Column ,Integer,String,Boolean
+from fastapi import Depends, FastAPI 
+from sqlalchemy import create_engine,String,Integer,Column
 from sqlalchemy.orm import sessionmaker,declarative_base,Session
 
 app=FastAPI()
-Database_url="sqlite:///./test.db"
+
+Database_url="sqlite:///./sample.db"
 engine=create_engine(
-    Database_url,connect_args={"check_same_thread":False}
+    Database_url,
+    connect_args={"check_same_thread":False}
 )
 SessionLocal=sessionmaker(autoflush=False,autocommit=False,bind=engine)
 Base=declarative_base()
 
-class Todo(Base):
-    __tablename__='todos'
-    
-    id=Column(Integer,primary_key=True,index=True)
-    title=Column(String)
-    completed=Column(Boolean,default=False)
+class Student(Base):
+    __tablename__= "student-data"
+
+    ID =Column(Integer,primary_key=True,index=True)
+    Name=Column(String)
     
 Base.metadata.create_all(bind=engine)
-def get_db():
+def show_db():
     db=SessionLocal()
-    try :
+    try:
         yield db
     finally:
         db.close()
-@app.get("/")
-def home(db :Session= Depends(get_db)):
-    return {'message':'db created successfully'}
+@app.get("/home")
+def home(db:Session=Depends(show_db)):
+    return {'message':'database created'}
+    
