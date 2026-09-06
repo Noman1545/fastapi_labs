@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI 
+from fastapi import Depends, FastAPI ,HTTPException
 from sqlalchemy import create_engine,String,Integer,Column
 from sqlalchemy.orm import sessionmaker,declarative_base,Session
 
@@ -29,11 +29,19 @@ def insert_data(Name:str,Age:int,db:Session=Depends(show)):
     db.commit()
     db.refresh(s1)
     return {"message":s1}
-@app.post("/show")
+@app.get("/show")
 def get_data(db:Session=Depends(show)):
     data=db.query(Student).all()
     return{
         'length':len(data),
         'data':data
     }
-    
+@app.get("/show/{student_id}")
+def data_by_id(student_id:int,db:Session=Depends(show)):
+    data_id=db.query(Student).filter(Student.ID==student_id).first()
+    if not data_id:
+        raise HTTPException(status_code=404,detail="ID not found")
+    return{
+        "student ID":data_id
+    }
+
