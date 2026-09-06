@@ -45,3 +45,13 @@ def data_by_id(student_id:int,db:Session=Depends(show)):
         "student ID":data_id
     }
 
+@app.put("/edit/{student_id}")
+def update_data(student_id:int,Name:str,Age:int,db:Session=Depends(show)):
+    update=db.query(Student).filter(Student.ID==student_id).first()
+    if not update:
+        raise HTTPException(status_code=404,detail="ID not found")
+    update.Name=Name
+    update.Age=Age
+    db.commit()
+    db.refresh(update)
+    return update
