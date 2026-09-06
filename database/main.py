@@ -55,3 +55,12 @@ def update_data(student_id:int,Name:str,Age:int,db:Session=Depends(show)):
     db.commit()
     db.refresh(update)
     return update
+@app.delete("/delete/{student_id}")
+def delete_data(student_id:int,db:Session=Depends(show)):
+    delete_id=db.query(Student).filter(Student.ID==student_id).first()
+    if not delete_data:
+        raise HTTPException(status_code=404,detail="ID not found")
+ 
+    db.delete(delete_id)
+    db.commit()
+    return {"message":"deleted"}
