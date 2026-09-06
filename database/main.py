@@ -29,3 +29,11 @@ def insert_data(Name:str,Age:int,db:Session=Depends(show)):
     db.commit()
     db.refresh(s1)
     return {"message":s1}
+@app.post("/show")
+def get_data(db:Session=Depends(show)):
+    data=db.query(Student).all()
+    return{
+        'length':len(data),
+        'data':data
+    }
+    
