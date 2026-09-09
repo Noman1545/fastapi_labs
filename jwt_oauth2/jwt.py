@@ -1,6 +1,8 @@
 from jose import jwt,JWTError
 from fastapi import FastAPI,HTTPException,Header,Depends
 from datetime import datetime,timedelta,timezone
+import os
+from dotenv import load_dotenv
 app=FastAPI()
 
 SecretKey='noman1125'
